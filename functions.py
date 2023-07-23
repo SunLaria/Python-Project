@@ -15,7 +15,7 @@ def startup():
 # print(startup())
 
 def create_task(name,end_date, responsible_person, description, category):
-    return Task(name, datetime.date.today(), end_date, responsible_person, description, category)
+    return Task(name, datetime.date.today().strftime("%m/%d/%Y"), end_date, responsible_person, description, category)
 
 def edit_task():
     pass
