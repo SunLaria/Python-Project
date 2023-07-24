@@ -1,25 +1,6 @@
 from functions import startup, create_user, view_users, delete_user, choose_user_task, choose_category_task, create_task
 import datetime
 
-def moderator_menu():
-    while True:
-        choice = input("""---------  Moderator Menu ---------
-1. View All Users
-2. Create New User
-3. Delete User
-4. Exit To Main Menu
-                   
-""")
-        if choice == "2":
-            print(create_user(input("Enter User Name To Register: ")))
-        elif choice == "1":
-            print(view_users())
-        elif choice == "3":
-            delete_user(input("User Name To Delete: "))
-        elif choice == "4":
-            break
-
-
 
 def create_menu():
     errors = []
@@ -47,7 +28,7 @@ def main_menu():
 1. Create Task
 2. View All Organization Tasks 
 3. Show Filtered Tasks
-4. Moderator""")
+    Your choice?: """)
     
     if choice == "1":
         print(create_menu())
@@ -55,5 +36,3 @@ def main_menu():
         pass
     elif choice == "3":
         pass
-    elif choice == "4":
-        moderator_menu()

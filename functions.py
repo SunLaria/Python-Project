@@ -12,93 +12,130 @@ def startup():
         print("Database Created")
     return True
 
-def create_user(user_name:str="default_username"):
+def create_user(user_name:str = "defualt_username"):
     """creates a user"""
-    try:
-        data = load()
-        data[user_name]={}
-        data[user_name]["category"]=[]
-        data[user_name]["tasks"]=[]
-        save(data=data)
-        return f"{user_name} User Created Succesffuly!"
-    except:
-        return "Database Not Found, Restart the menu"
+    data = load()
+    data[user_name]={}
+    data[user_name]={"tasks":[],"category":[]}
+    save(data=data)
+    return f"{user_name} user Created Succesffuly!"
 
 def view_users():
     data = load()
-    print("All Users: ")
-    print()
     if len(data.keys()) > 0:
-        return ", ".join(data.keys())
+        print("----------------------------------------")
+        return f"All Users:\n\n{', '.join(data.keys())}"
     else:
-        return "No Users Found In Database"
+        print("----------------------------------------")
+        return f"All Users:\n\nNo Users Found in Database"
 
 def delete_user(user_name:str="default_username"):
-    choice = input("Delete Confirmation: y\\n")
+    choice = input("Delete Confirmation y\\n: ")
     if choice == "y":
         data = load()
-        try:
+        if user_name in data.keys():
             del data[user_name]
             save(data=data)
-            print(f"{user_name} was deleted Succesffuly")
-        except:
-            print(f"{user_name} Not Found")
+            print()
+            return f"{user_name} Deleted Succesffuly"
+        else:
+            print()
+            return f"{user_name} Not Found"
+
+
 
 def choose_user_task():
-    print(view_users())
-    username = input("Enter your Responsible User for this task:")
-    data = load()
-    for user in data.keys():
-        if username == user:
-            return user
+    while True:
+        print()
+        print(view_users())
+        print()
+        choice = input("Enter the responsible User for this task or [A]dd, [R]emove: ")
+        print()
+        if choice == "A":
+            add_user = input("User Name to add: ")
+            if add_user != "" or add_user.isspace() != False:
+                try:
+                    print(create_user(add_user))
+                except:
+                    print("Error Creating User")
+
+        elif choice == "R":
+            del_user = input("User Name to Delete: ")
+            if del_user != "" or del_user.isspace() != False:
+                try:
+                    print()
+                    print(delete_user(del_user))
+                except:
+                    print("Error Deleting User")
+        else:
+            data = load()
+            for user in data.keys():
+                if user == choice:
+                    return user
+            
+
+
 
 
 
 def create_category(user_name:str = "defualt_username", category:str="default_category"):
     """creates a user"""
-    try:
-        data = load()
-        data[user_name]["category"].append(category)
-        save(data=data)
-        print(f"{user_name} Category Created Succesffuly!")
-    except:
-        print("Database Not Found, Restart the menu")
+    data = load()
+    data[user_name]["category"].append(category)
+    save(data=data)
+    print(f"{user_name} Category Created Succesffuly!")
+
 
 def view_categories(username):
     data = load()
-    print(f"All {username} Categories: ")
-    print(", ".join(data[username]["category"]))
+    if len(data[username]["category"]) != 0:
+        print("----------------------------------------")
+        return f"All {username} Categories:\n\n{', '.join(data[username]['category'])}"
+    else:
+        print("----------------------------------------")
+        return f"All {username} Categories:\n\nNo Categories For this User"
+
 
 def delete_category(user_name:str="default_username",category:str = "defualt_category"):
     choice = input("Delete Confirmation: y\\n")
     if choice == "y":
         data = load()
-        try:
-            if category in data[user_name]["category"]:
-                del data[user_name]["category"]
-                save(data=data)
-                print(f"{category} Deleted Succesffuly")
-        except:
-            print(f"{category} Not Found")
+        if category in data[user_name]["category"]:
+            data[user_name]["category"].remove(category)
+            save(data=data)
+            print()
+            return f"{category} Deleted Succesffuly"
+        else:
+            print()
+            return f"{category} Not Found"
+
 
 def choose_category_task(username):
-    view_categories(username=username)
-    choice = input("Enter the chosen category for this task or [A]dd, [R]emove: ")
-    if choice == "A":
-        add_categroy = input("Category Name to add: ")
-        if add_categroy != "" or add_categroy.isspace() != True:
-            create_category(user_name=username,category=add_categroy)
-    elif choice == "R":
-        del_categroy = input("Category Name to add: ")
-        if del_categroy != "" or del_categroy.isspace() != True:
-            delete_category(user_name=username,category=del_categroy)
-    else:
-        data = load()
-        for category in data[username]["category"]:
-            if category == choice:
-                return category
+    while True:
+        print(view_categories(username=username))
+        print()
+        choice = input("Enter the chosen category for this task or [A]dd, [R]emove: ")
+        print()
+        if choice == "A":
+            add_categroy = input("Category Name to add: ")
+            if add_categroy != "" or add_categroy.isspace() != False:
+                try:
+                    print(create_category(user_name=username,category=add_categroy))
+                except:
+                    print("Error Creating Category")
+        elif choice == "R":
+            del_categroy = input("Category Name to Delete: ")
+            if del_categroy != "" or del_categroy.isspace() != False:
+                try:
+                    print()
+                    delete_category(user_name=username,category=del_categroy)
+                except:
+                    print("Error Deleting User")
         else:
-            print("Category Not found")
+            data = load()
+            for category in data[username]["category"]:
+                if category == choice:
+                    return category
 
 
 
@@ -108,7 +145,11 @@ def task_search():
 def create_task(name,end_date, responsible_person, description, category):
     data = load()
     task = Task(name, datetime.date.today().strftime("%d/%m/%Y"), end_date, responsible_person, description, category)
-    data[responsible_person]["tasks"].append(task)
+    if "tasks" not in data[responsible_person]:
+        data[responsible_person]["tasks"]=[]
+        data[responsible_person]["tasks"].append(task)
+    else:
+        data[responsible_person]["tasks"].append(task)
     save(data=data)
     return "Task Saved Succesffuly"
 
