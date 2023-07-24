@@ -138,10 +138,6 @@ def choose_category_task(username):
                     return category
 
 
-
-def task_search():
-    pass
-
 def create_task(name,end_date, responsible_person, description, category):
     data = load()
     task = Task(name, datetime.date.today().strftime("%d/%m/%Y"), end_date, responsible_person, description, category)
