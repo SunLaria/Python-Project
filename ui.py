@@ -13,7 +13,7 @@ def create_menu():
     for info in task_info:
         if info =="" or info.isspace()== True:
             errors.append(info)
-    if errors > 0:
+    if len(errors) != 0:
         return f'One or more Task info is wrong'
     else:
         try:
