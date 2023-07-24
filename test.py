@@ -1,6 +1,7 @@
 from crud import load,save
 from myclass import Task
 import random, datetime
+from functions import startup
 
 
 #testing load when no file exist, make sure no pickel file exits
@@ -59,3 +60,5 @@ def random_tasks_save_load_pickle(count:int = 10):
 
 # random_tasks_save_load_pickle()
 
+#testing startup function
+print(startup())
