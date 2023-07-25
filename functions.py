@@ -2,6 +2,7 @@ from crud import save,load
 from myclass import Task
 import datetime
 
+
 def startup():
     """Starting up the app, verifying there is an saved pickle file, if not creating one"""
     try:
@@ -15,10 +16,13 @@ def startup():
 def create_user(user_name:str = "defualt_username"):
     """creates a user"""
     data = load()
-    data[user_name]={}
-    data[user_name]={"tasks":[],"category":[]}
-    save(data=data)
-    return f"{user_name} user Created Succesffuly!"
+    if user_name not in data.keys():
+        data[user_name]={}
+        data[user_name]={"tasks":[],"category":[]}
+        save(data=data)
+        return f"{user_name} user Created Succesffuly!"
+    else:
+        return f"{user_name} User Already Exists"
 
 def view_users():
     data = load()
@@ -41,8 +45,8 @@ def delete_user(user_name:str="default_username"):
         else:
             print()
             return f"{user_name} Not Found"
-
-
+    else:
+        return f"{user_name} Delete Cancelled"
 
 def choose_user_task():
     while True:
@@ -53,20 +57,18 @@ def choose_user_task():
         print()
         if choice == "A":
             add_user = input("User Name to add: ")
-            if add_user != "" or add_user.isspace() != False:
-                try:
-                    print(create_user(add_user))
-                except:
-                    print("Error Creating User")
+            if add_user != "" and add_user.isspace() != True and add_user.isalpha() == True:
+                print(create_user(add_user))
+            else:
+                print("Eror - User can only contain letters")
 
         elif choice == "R":
             del_user = input("User Name to Delete: ")
-            if del_user != "" or del_user.isspace() != False:
-                try:
-                    print()
-                    print(delete_user(del_user))
-                except:
-                    print("Error Deleting User")
+            if del_user != "" and del_user.isspace() != True and del_user.isalpha() == True:
+                print()
+                print(delete_user(del_user))
+            else:
+                print("Eror - User can only contain letters")
         else:
             data = load()
             for user in data.keys():
@@ -83,7 +85,7 @@ def create_category(user_name:str = "defualt_username", category:str="default_ca
     data = load()
     data[user_name]["category"].append(category)
     save(data=data)
-    print(f"{user_name} Category Created Succesffuly!")
+    return f"{category} Category Created Succesffuly!"
 
 
 def view_categories(username):
@@ -97,7 +99,7 @@ def view_categories(username):
 
 
 def delete_category(user_name:str="default_username",category:str = "defualt_category"):
-    choice = input("Delete Confirmation: y\\n")
+    choice = input("Delete Confirmation: y\\n: ")
     if choice == "y":
         data = load()
         if category in data[user_name]["category"]:
@@ -108,7 +110,8 @@ def delete_category(user_name:str="default_username",category:str = "defualt_cat
         else:
             print()
             return f"{category} Not Found"
-
+    else:
+        return f"{category} Delete Cancelled"
 
 def choose_category_task(username):
     while True:
@@ -118,19 +121,18 @@ def choose_category_task(username):
         print()
         if choice == "A":
             add_categroy = input("Category Name to add: ")
-            if add_categroy != "" or add_categroy.isspace() != False:
-                try:
-                    print(create_category(user_name=username,category=add_categroy))
-                except:
-                    print("Error Creating Category")
+            if add_categroy != "" and add_categroy.isspace() != True and add_categroy.isalpha() == True:
+                print(create_category(user_name=username,category=add_categroy))
+            else:
+                print("Eror - Category can only contain letters")
+
         elif choice == "R":
             del_categroy = input("Category Name to Delete: ")
-            if del_categroy != "" or del_categroy.isspace() != False:
-                try:
-                    print()
-                    delete_category(user_name=username,category=del_categroy)
-                except:
-                    print("Error Deleting User")
+            if del_categroy != "" and del_categroy.isspace() != True and del_categroy.isalpha() == True:
+                print()
+                print(delete_category(user_name=username,category=del_categroy))
+            else:
+                print("Eror - Category can only contain letters")
         else:
             data = load()
             for category in data[username]["category"]:

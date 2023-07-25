@@ -1,5 +1,6 @@
 from functions import startup, create_user, view_users, delete_user, choose_user_task, choose_category_task, create_task
 import datetime
+import os
 
 
 def create_menu():
@@ -22,6 +23,7 @@ def create_menu():
             return "task creation went bad"
 
 def main_menu():
+    os.system('cls')
     startup()
     print()
     choice = input("""---------  Task manager ---------
