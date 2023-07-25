@@ -20,17 +20,16 @@ def create_user(user_name:str = "defualt_username"):
         data[user_name]={}
         data[user_name]={"tasks":[],"category":[]}
         save(data=data)
-        return f"{user_name} user Created Succesffuly!"
+        return f"{user_name} user Created Successfully!"
     else:
         return f"{user_name} User Already Exists"
 
 def view_users():
     data = load()
+    border()
     if len(data.keys()) > 0:
-        print("----------------------------------------")
         return f"All Users:\n\n{', '.join(data.keys())}"
     else:
-        print("----------------------------------------")
         return f"All Users:\n\nNo Users Found in Database"
 
 def delete_user(user_name:str="default_username"):
@@ -41,7 +40,7 @@ def delete_user(user_name:str="default_username"):
             del data[user_name]
             save(data=data)
             print()
-            return f"{user_name} Deleted Succesffuly"
+            return f"{user_name} Deleted Successfully"
         else:
             print()
             return f"{user_name} Not Found"
@@ -50,7 +49,6 @@ def delete_user(user_name:str="default_username"):
 
 def choose_user_task():
     while True:
-        print()
         print(view_users())
         print()
         choice = input("Enter the responsible User for this task or [A]dd, [R]emove: ")
@@ -85,16 +83,15 @@ def create_category(user_name:str = "defualt_username", category:str="default_ca
     data = load()
     data[user_name]["category"].append(category)
     save(data=data)
-    return f"{category} Category Created Succesffuly!"
+    return f"{category} Category Created Successfully!"
 
 
 def view_categories(username):
     data = load()
+    border()
     if len(data[username]["category"]) != 0:
-        print("----------------------------------------")
         return f"All {username} Categories:\n\n{', '.join(data[username]['category'])}"
     else:
-        print("----------------------------------------")
         return f"All {username} Categories:\n\nNo Categories For this User"
 
 
@@ -106,7 +103,7 @@ def delete_category(user_name:str="default_username",category:str = "defualt_cat
             data[user_name]["category"].remove(category)
             save(data=data)
             print()
-            return f"{category} Deleted Succesffuly"
+            return f"{category} Deleted Successfully"
         else:
             print()
             return f"{category} Not Found"
@@ -149,7 +146,35 @@ def create_task(name,end_date, responsible_person, description, category):
     else:
         data[responsible_person]["tasks"].append(task)
     save(data=data)
-    return "Task Saved Succesffuly"
+    return "Task Saved Successfully"
+
+def all_users_tasks():
+    data = load()
+    all_user_tasks = []
+    for user in data.keys():
+          for task in data[user]["tasks"]:
+            all_user_tasks.append(task)
+    return all_user_tasks
+    
+
+def view_all_users_tasks():
+    all_tasks = all_users_tasks()
+    count = 1
+    border()
+    print()
+    print("All Users Tasks:")
+    print()
+    if len(all_tasks) != 0:
+        print("#: name, end date, category, responsible person".title())
+        print()
+        for task in all_tasks:
+            print(f'{count}: {task}')
+            count+=1
+    else:
+        print("No Tasks found in the Database!")
+
+def border():
+    print("----------------------------------------")
 
 def edit_task():
     pass

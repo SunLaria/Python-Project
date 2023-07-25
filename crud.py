@@ -11,3 +11,11 @@ def load(file:str = "data.pickle"):
     with open(file,"rb") as f:
         data = pickle.load(file=f)
     return data
+
+# def search_task(task:object="default_task"):
+#     """search and return the task object"""
+#     data = load()
+#     for user in data.keys():
+#           for user_task in data[user]["tasks"]:
+#             if user_task == task:
+#                 return user_task
