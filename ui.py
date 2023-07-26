@@ -1,4 +1,5 @@
-from functions import startup, choose_user_task, choose_category_task, create_task, view_all_users_tasks,all_users_tasks, border
+from functions import startup, choose_user_task, choose_category_task, view_all_users_tasks,all_users_tasks, border, edit_task, delete_task
+from crud import create_task
 import datetime
 import os
 
@@ -27,16 +28,31 @@ def create_menu():
             return "task creation went bad"
 
 def view_menu():
-    all_tasks = all_users_tasks()
     while True:
-        view_all_users_tasks()
+        all_tasks = all_users_tasks()
+        view_all_users_tasks(tasks_list=all_tasks)
         print()
         choice = input("Choose Task Number Or [M]ain menu: ".title())
         if choice != "" and choice.isspace() == False and choice.isnumeric() == True and int(choice) != 0 and int(choice) <= len(all_tasks):
             task_menu(task=all_tasks[int(choice)-1])
         elif choice == "M":
             break
+
+def edit_menu(task):
+    while True:
+        edit_keys = ["Name","End Date","Responsible Person","Description","Category"]
+        choice = input("Please Enter The Category You would like to edit or [B]ack: ".title())
+        if choice != "" and choice.isspace() == False:
+            if choice == "B":
+                break
+            if choice in edit_keys:
+                print()
+                return edit_task(task=task,choice=choice)
+                
+                
         
+
+
 def task_menu(task:object="default_task"):
     while True:
         border()
@@ -51,11 +67,19 @@ def task_menu(task:object="default_task"):
         print()
         choice = input("[E]dit, E[X]pand, [D]elete, [B]ack to menu: ")
         if choice == "E":
-            pass
+            print(edit_menu(task))
         elif choice == "X":
             pass
         elif choice == "D":
-            pass
+            choice = input("Delete Confirmation y\\n: ")
+            if choice == "y":
+                print(delete_task(task))
+                break
+            else:
+                print('Task Delete Cancelled')
+            
+                
+
         elif choice == "B":
             break
 

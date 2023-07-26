@@ -1,4 +1,4 @@
-from crud import save,load
+from crud import save,load, edit,delete, search
 from myclass import Task
 import datetime
 
@@ -137,17 +137,6 @@ def choose_category_task(username):
                     return category
 
 
-def create_task(name,end_date, responsible_person, description, category):
-    data = load()
-    task = Task(name, datetime.date.today().strftime("%d/%m/%Y"), end_date, responsible_person, description, category)
-    if "tasks" not in data[responsible_person]:
-        data[responsible_person]["tasks"]=[]
-        data[responsible_person]["tasks"].append(task)
-    else:
-        data[responsible_person]["tasks"].append(task)
-    save(data=data)
-    return "Task Saved Successfully"
-
 def all_users_tasks():
     data = load()
     all_user_tasks = []
@@ -157,18 +146,18 @@ def all_users_tasks():
     return all_user_tasks
     
 
-def view_all_users_tasks():
+def view_all_users_tasks(tasks_list:list="all_tasks"):
     all_tasks = all_users_tasks()
     count = 1
     border()
     print()
     print("All Users Tasks:")
     print()
-    if len(all_tasks) != 0:
+    if len(tasks_list) != 0:
         print("#: name, end date, category, responsible person".title())
         print()
-        for task in all_tasks:
-            print(f'{count}: {task}')
+        for task in tasks_list:
+            print(f'{count}: {task}'.title())
             count+=1
     else:
         print("No Tasks found in the Database!")
@@ -176,12 +165,52 @@ def view_all_users_tasks():
 def border():
     print("----------------------------------------")
 
-def edit_task():
-    pass
+def edit_task(task:object, choice:str="defualt"):
+    if choice == "End Date":
+        return 'Use Extend Feature'
+    elif choice == "Responsible Person":
+        data = load()
+        cache_task = task
+        delete(task=cache_task,data=data)
+        save(data=data)
+        new_user = choose_user_task()
+        data = load()
+        edit(task=cache_task,key="responsible_person",new_value=new_user)
+        data[new_user]["tasks"].append(cache_task)
+        save(data=data)
+        return f"{choice} Edit Went Successfully"
+    elif choice == "Category":
+        data = load()
+        cache_task = task
+        delete(task=cache_task,data=data)
+        save(data=data)
+        new_category = choose_category_task(cache_task.responsible_person)
+        data=load()
+        edit(task=cache_task,key="category",new_value=new_category)
+        data[cache_task.responsible_person]["tasks"].append(cache_task)
+        save(data=data)
+        return f"{choice} Edit Went Successfully"
+        
+    else:
+        new_value = input("Enter a new value: ")
+        if new_value != "" and new_value.isspace() == False:
+            data = load()
+            cache_task = task
+            delete(task=cache_task,data=data)
+            keys = {"Name":"name","End Date":"end_date","Description":"description"}
+            edit(task=cache_task,key=keys[choice],new_value=new_value)
+            data[cache_task.responsible_person]["tasks"].append(cache_task)
+            save(data=data)
+            return f"{choice} Edit Went Successfully"
+        else:
+            return 'Value Cannot Be Empty'
 
-def delete_task():
-    pass
-
+def delete_task(task):
+        data = load()
+        delete(task=task, data=data)
+        save(data=data)
+        return 'Task Deleted Successfully'
+    
 def search_task():
     pass
 

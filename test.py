@@ -1,4 +1,4 @@
-from crud import load,save
+from crud import load,save, delete, search
 from myclass import Task
 import random, datetime
 from functions import startup
@@ -57,6 +57,11 @@ def random_tasks_save_load_pickle(count:int = 10):
             print(task.taskinfo())
     except:
         print("load went wrong")
+
+    try:
+        delete(task)
+    except:
+        print("somthing went wrong")
 
 # random_tasks_save_load_pickle()
 
