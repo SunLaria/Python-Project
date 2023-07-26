@@ -162,6 +162,24 @@ def view_all_users_tasks(tasks_list:list="all_tasks"):
     else:
         print("No Tasks found in the Database!")
 
+def view_filter_tasks(tasks_list:list="all_tasks:", filter_word:str="responsible_person"):
+    all_tasks = all_users_tasks()
+    count = 1
+    border()
+    print()
+    print(f"All Users Tasks filtered by {filter_word}:")
+    print()
+    if len(tasks_list) != 0:
+        print("#: name, end date, category, responsible person".title())
+        print()
+        for task in tasks_list.sort(key=getattr(task,filter_word)):
+            print(f'{count}: {task}'.title())
+            count+=1
+    else:
+        print("No Tasks found in the Database!")
+
+
+
 def border():
     print("----------------------------------------")
 
@@ -210,9 +228,3 @@ def delete_task(task):
         delete(task=task, data=data)
         save(data=data)
         return 'Task Deleted Successfully'
-    
-def search_task():
-    pass
-
-def filter_tasks():
-    pass

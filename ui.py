@@ -1,4 +1,4 @@
-from functions import startup, choose_user_task, choose_category_task, view_all_users_tasks,all_users_tasks, border, edit_task, delete_task
+from functions import startup, choose_user_task, choose_category_task, view_all_users_tasks,all_users_tasks, border, edit_task, delete_task, view_filter_tasks
 from crud import create_task
 import datetime
 import os
@@ -37,6 +37,18 @@ def view_menu():
             task_menu(task=all_tasks[int(choice)-1])
         elif choice == "M":
             break
+
+def view_filter_menu(filter_word):
+    while True:
+        all_tasks = all_users_tasks()
+        view_filter_tasks(tasks_list=all_tasks,filter_word=filter_word)
+        print()
+        choice = input("Choose Task Number Or [M]ain menu: ".title())
+        if choice != "" and choice.isspace() == False and choice.isnumeric() == True and int(choice) != 0 and int(choice) <= len(all_tasks):
+            task_menu(task=all_tasks[int(choice)-1])
+        elif choice == "M":
+            break
+
 
 def edit_menu(task):
     while True:
@@ -83,6 +95,7 @@ def task_menu(task:object="default_task"):
         elif choice == "B":
             break
 
+
 def main_menu():
     os.system('cls')
     startup()
@@ -101,6 +114,7 @@ def main_menu():
     elif choice == "2":
         view_menu()
     elif choice == "3":
-        pass
+        filter_word = input('filter search word? (creation date, end date, responsible person, category): '.title())
+        view_filter_menu(filter_word=filter_word)
     elif choice =="4":
         quit()
