@@ -13,9 +13,17 @@ def startup():
         print("Database Created")
     return True
 
+def verify_uppercase(string):
+    if string.istitle() != True and string.isalpha() == True:
+        return string.title()
+    else:
+        return string
+
+
 def create_user(user_name:str = "defualt_username"):
     """creates a user"""
     data = load()
+    user_name = verify_uppercase(user_name)
     if user_name not in data.keys():
         data[user_name]={}
         data[user_name]={"tasks":[],"category":[]}
@@ -33,8 +41,10 @@ def view_users():
         return f"All Users:\n\nNo Users Found in Database"
 
 def delete_user(user_name:str="default_username"):
-    choice = input("Delete Confirmation y\\n: ")
-    if choice == "y":
+    user_name = verify_uppercase(user_name)
+    choice = input("Delete Confirmation Y\\N: ")
+    choice = verify_uppercase(choice)
+    if choice == "Y":
         data = load()
         if user_name in data.keys():
             del data[user_name]
@@ -52,9 +62,11 @@ def choose_user_task():
         print(view_users())
         print()
         choice = input("Enter the responsible User for this task or [A]dd, [R]emove: ")
+        choice = verify_uppercase(choice)
         print()
         if choice == "A":
             add_user = input("User Name to add: ")
+            add_user = verify_uppercase(add_user)
             if add_user != "" and add_user.isspace() != True and add_user.isalpha() == True:
                 print(create_user(add_user))
             else:
@@ -62,6 +74,7 @@ def choose_user_task():
 
         elif choice == "R":
             del_user = input("User Name to Delete: ")
+            del_user = verify_uppercase(del_user)
             if del_user != "" and del_user.isspace() != True and del_user.isalpha() == True:
                 print()
                 print(delete_user(del_user))
@@ -81,6 +94,8 @@ def choose_user_task():
 def create_category(user_name:str = "defualt_username", category:str="default_category"):
     """creates a user"""
     data = load()
+    user_name = verify_uppercase(user_name)
+    category = verify_uppercase(category)
     data[user_name]["category"].append(category)
     save(data=data)
     return f"{category} Category Created Successfully!"
@@ -88,6 +103,7 @@ def create_category(user_name:str = "defualt_username", category:str="default_ca
 
 def view_categories(username):
     data = load()
+    username = verify_uppercase(username)
     border()
     if len(data[username]["category"]) != 0:
         return f"All {username} Categories:\n\n{', '.join(data[username]['category'])}"
@@ -96,8 +112,11 @@ def view_categories(username):
 
 
 def delete_category(user_name:str="default_username",category:str = "defualt_category"):
-    choice = input("Delete Confirmation: y\\n: ")
-    if choice == "y":
+    user_name = verify_uppercase(user_name)
+    category = verify_uppercase(category)
+    choice = input("Delete Confirmation: Y\\N: ")
+    choice = verify_uppercase(choice)
+    if choice == "Y":
         data = load()
         if category in data[user_name]["category"]:
             data[user_name]["category"].remove(category)
@@ -111,21 +130,27 @@ def delete_category(user_name:str="default_username",category:str = "defualt_cat
         return f"{category} Delete Cancelled"
 
 def choose_category_task(username):
+    username = verify_uppercase(username)
     while True:
         print(view_categories(username=username))
         print()
         choice = input("Enter the chosen category for this task or [A]dd, [R]emove: ")
+        choice = verify_uppercase(choice)
         print()
         if choice == "A":
             add_categroy = input("Category Name to add: ")
+            add_categroy = verify_uppercase(add_categroy)
             if add_categroy != "" and add_categroy.isspace() != True and add_categroy.isalpha() == True:
+                add_categroy = verify_uppercase(add_categroy)
                 print(create_category(user_name=username,category=add_categroy))
             else:
                 print("Eror - Category can only contain letters")
 
         elif choice == "R":
             del_categroy = input("Category Name to Delete: ")
+            del_categroy = verify_uppercase(del_categroy)
             if del_categroy != "" and del_categroy.isspace() != True and del_categroy.isalpha() == True:
+                del_categroy = verify_uppercase(add_categroy)
                 print()
                 print(delete_category(user_name=username,category=del_categroy))
             else:
@@ -161,12 +186,12 @@ def view_all_users_tasks(tasks_list:list="all_tasks"):
     else:
         print("No Tasks found in the Database!")
 
-def view_filter_tasks(tasks_list:list="all_tasks:", filter_word:str="responsible_person"):
-    tasks_list.sort(key = lambda x: getattr(x, filter_word))
+def view_sorted_tasks(tasks_list:list="all_tasks:", sort_word:str="responsible_person"):
+    tasks_list.sort(key = lambda x: getattr(x, sort_word)[0])
     count = 1
     border()
     print()
-    print(f"All Users Tasks filtered by {filter_word}:")
+    print(f"All Users Tasks Sorted By {sort_word}:")
     print()
     if len(tasks_list) != 0:
         print("#: name, end date, category, responsible person".title())
@@ -181,6 +206,7 @@ def view_filter_tasks(tasks_list:list="all_tasks:", filter_word:str="responsible
 
 def border():
     print("----------------------------------------")
+
 
 def edit_task(task:object, choice:str="defualt"):
     if choice == "End Date":
@@ -210,6 +236,7 @@ def edit_task(task:object, choice:str="defualt"):
         
     else:
         new_value = input("Enter a new value: ")
+        new_value = verify_uppercase(new_value)
         if new_value != "" and new_value.isspace() == False:
             data = load()
             cache_task = task
