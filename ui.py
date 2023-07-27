@@ -114,7 +114,7 @@ def main_menu():
     elif choice == "2":
         view_menu()
     elif choice == "3":
-        filter_word = input('filter search word? (creation date, end date, responsible person, category): '.title())
-        view_filter_menu(filter_word=filter_word)
+        # filter_word = input('filter search word? (creation date, end date, responsible person, category): '.title())
+        view_filter_menu(filter_word=input('filter search word? (creation date, end date, responsible person, category): '.title()))
     elif choice =="4":
         quit()
