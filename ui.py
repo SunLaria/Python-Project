@@ -7,12 +7,17 @@ import os
 def create_menu():
     errors = []
     border()
+    print()
     taskname = input("Task Name: ")
     taskname = verify_uppercase(taskname)
+    print()
     border()
+    print()
     end_date = input("End Date: ")
+    print()
     responsible_person = choose_user_task()
     border()
+    print()
     description = input("Task description: ")
     description = verify_uppercase(description)
     category = choose_category_task(responsible_person)
@@ -21,39 +26,45 @@ def create_menu():
         if info == "" or info.isspace() == True:
             errors.append(info)
     if len(errors) > 0:
+        border()
+        print()
         return f'One or more Task info is wrong'
     else:
         try:
             border()
             return create_task(name=taskname,end_date=end_date,responsible_person=responsible_person,description=description,category=category)
         except:
+            border()
+            print()
             return "task creation went bad"
 
 def view_menu():
     while True:
         border()
+        print()
         all_tasks = all_users_tasks()
         view_all_users_tasks(tasks_list=all_tasks)
         print()
-        choice = input("Choose Task Number Or [M]ain menu: ")
+        choice = input("Choose Task Number Or [B]ack To Menu: ")
         choice = verify_uppercase(choice)
         if choice != "" and choice.isspace() == False and choice.isnumeric() == True and int(choice) != 0 and int(choice) <= len(all_tasks):
             task_menu(task=all_tasks[int(choice)-1])
-        elif choice == "M":
+        elif choice == "B":
             break
 
 def view_sorted_menu(sort_word):
     while True:
         border()
+        print()
         all_tasks = all_users_tasks()
-        sort_keys = {"Name":"name","end date":"end_date","End date":"end_date","End Date":"end_date","responsible person":"responsible_person","Responsible person":"esponsible_person","Responsible Person":"responsible_person","Category":"category"}
+        sort_keys = {"Name":"name","End Date":"end_date","Responsible Person":"responsible_person","Category":"category"}
         view_sorted_tasks(tasks_list=all_tasks,sort_word=sort_keys[sort_word])
         print()
-        choice = input("Choose Task Number Or [M]ain menu: ")
+        choice = input("Choose Task Number Or [B]ack: ")
         choice = verify_uppercase(choice)
         if choice != "" and choice.isspace() == False and choice.isnumeric() == True and int(choice) != 0 and int(choice) <= len(all_tasks):
             task_menu(task=all_tasks[int(choice)-1])
-        elif choice == "M":
+        elif choice == "B":
             break
 
 
@@ -73,17 +84,19 @@ def sort_menu():
     while True:
         border()
         print()
-        sort_keys = ["Name","end date","End Date","End date","responsible person","Responsible person","Responsible Person","Category"]
+        sort_keys = ["Name","End Date","Responsible Person","Category"]
         print("Sort Word Options:\n\nName, End Date, Responsible Person, Category")
         print()
-        choice = input("Please Enter The Sort Search Word: Or [B]ack: ")
+        choice = input("Please Enter The Sort Search Word Or [B]ack To Menu: ")
         choice = verify_uppercase(choice)
         if choice != "" and choice.isspace() == False:
             if choice == "B":
                 break
-            if choice in sort_keys:
-                print()
-                return view_sorted_menu(sort_word=choice)
+            elif len(choice.split(" ")) == 2:
+                choice = " ".join(map(lambda x: x.title(),choice.split(" ")))
+        if choice in sort_keys:
+            print()
+            view_sorted_menu(sort_word=choice)
 
 
 def task_menu(task:object="default_task"):
@@ -98,7 +111,7 @@ def task_menu(task:object="default_task"):
         Description : {task.description}
         Category: {task.category}""".title())
         print()
-        choice = input("[E]dit, E[X]pand, [D]elete, [B]ack to menu: ")
+        choice = input("[E]dit, E[X]pand, [D]elete, [B]ack To Menu: ")
         choice = verify_uppercase(choice)
         if choice == "E":
             print(edit_menu(task))

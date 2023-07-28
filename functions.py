@@ -35,6 +35,7 @@ def create_user(user_name:str = "defualt_username"):
 def view_users():
     data = load()
     border()
+    print()
     if len(data.keys()) > 0:
         return f"All Users:\n\n{', '.join(data.keys())}"
     else:
@@ -105,6 +106,7 @@ def view_categories(username):
     data = load()
     username = verify_uppercase(username)
     border()
+    print()
     if len(data[username]["category"]) != 0:
         return f"All {username} Categories:\n\n{', '.join(data[username]['category'])}"
     else:
@@ -173,8 +175,6 @@ def all_users_tasks():
 
 def view_all_users_tasks(tasks_list:list="all_tasks"):
     count = 1
-    border()
-    print()
     print("All Users Tasks:")
     print()
     if len(tasks_list) != 0:
@@ -189,9 +189,7 @@ def view_all_users_tasks(tasks_list:list="all_tasks"):
 def view_sorted_tasks(tasks_list:list="all_tasks:", sort_word:str="responsible_person"):
     tasks_list.sort(key = lambda x: getattr(x, sort_word)[0])
     count = 1
-    border()
-    print()
-    print(f"All Users Tasks Sorted By {sort_word}:")
+    print(f"All Users Tasks Sorted By {sort_word}:".title())
     print()
     if len(tasks_list) != 0:
         print("#: name, end date, category, responsible person".title())

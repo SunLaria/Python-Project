@@ -42,4 +42,5 @@ def create_task(name,end_date, responsible_person, description, category):
     else:
         data[responsible_person]["tasks"].append(task)
     save(data=data)
+    print()
     return "Task Saved Successfully"
