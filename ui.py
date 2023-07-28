@@ -1,4 +1,4 @@
-from functions import startup, choose_user_task, choose_category_task, view_all_users_tasks,all_users_tasks, border, edit_task, delete_task, view_sorted_tasks, verify_uppercase
+from functions import startup, choose_user_task, choose_category_task, view_all_users_tasks,all_users_tasks, border, edit_task, delete_task, view_sorted_tasks, verify_uppercase, end_date_define
 from crud import create_task
 import datetime
 import os
@@ -13,7 +13,7 @@ def create_menu():
     print()
     border()
     print()
-    end_date = input("End Date: ")
+    end_date = end_date_define(creation_date=datetime.date.today(),num=int(input("Number: ")),choice=input("d\\m\\y: "))
     print()
     responsible_person = choose_user_task()
     border()
@@ -21,7 +21,7 @@ def create_menu():
     description = input("Task description: ")
     description = verify_uppercase(description)
     category = choose_category_task(responsible_person)
-    task_info = [taskname,end_date,responsible_person,description,category]
+    task_info = [taskname,responsible_person,description,category]
     for info in task_info:
         if info == "" or info.isspace() == True:
             errors.append(info)

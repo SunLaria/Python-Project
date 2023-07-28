@@ -163,6 +163,16 @@ def choose_category_task(username):
                 if category == choice:
                     return category
 
+def end_date_define(creation_date:tuple,num:int=0,choice:str="d"):
+    creation_date
+    if choice == "D":
+        return datetime.date(day=creation_date.day+num,month=creation_date.month,year=creation_date.year)
+    elif choice == "M":
+        return datetime.date(day=creation_date.day,month=creation_date.month+num,year=creation_date.year)
+    elif choice == "Y":
+        return datetime.date(day=creation_date.day,month=creation_date.month,year=creation_date.year+num)
+
+
 
 def all_users_tasks():
     data = load()

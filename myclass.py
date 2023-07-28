@@ -14,5 +14,5 @@ class Task:
         return F'{self.name}, {self.responsible_person}, {self.end_date}, {self.category}'
 
     def taskinfo(self) -> str:
-        return self.name, self.creation_date, self.end_date, self.responsible_person, self.description, self.category
+        return self.name, self.creation_date.strftime("%d/%m/%Y"), self.end_date, self.responsible_person, self.description, self.category
     

@@ -35,7 +35,7 @@ def edit(task:object="default_task",key:str = "default_key",new_value:str = "def
 
 def create_task(name,end_date, responsible_person, description, category):
     data = load()
-    task = Task(name, datetime.date.today().strftime("%d/%m/%Y"), end_date, responsible_person, description, category)
+    task = Task(name, datetime.date.today(), end_date, responsible_person, description, category)
     if "tasks" not in data[responsible_person]:
         data[responsible_person]["tasks"]=[]
         data[responsible_person]["tasks"].append(task)
