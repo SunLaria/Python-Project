@@ -149,7 +149,7 @@ def end_date_create(creation_date:tuple):
             if date_key in date_keys.keys():
                 print()
                 number= input(f"How Many {date_keys[date_key]}: ")
-                if int(number) > 0:
+                if number.isdigit() == True and int(number) > 0:
                     return end_date_define(creation_date=creation_date,num=number,choice=date_key)
             
 def main_menu():

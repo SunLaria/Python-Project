@@ -291,7 +291,7 @@ def extend_task(task:object = "task"):
             elif date_key in date_keys.keys():
                 print()
                 number= input(f"How Many {date_keys[date_key]}: ")
-                if int(number) > 0:
+                if number.isdigit() == True and int(number) > 0:
                     data = load()
                     cache_task = task
                     delete(task=task, data=data)
