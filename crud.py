@@ -29,6 +29,13 @@ def delete(task:object="default_task",data:dict="data"):
                  data[user]["tasks"].remove(user_task)
                  return "Deleted"
 
+def delete_test(task:object="default_task",data:list="data"):
+    """search and delete a task from specifid data"""
+    for task in data:
+            data.remove(task)
+            return "Deleted"
+
+
 def edit(task:object="default_task",key:str = "default_key",new_value:str = "default_value"):
     """edit task atteibute"""
     setattr(task,key,new_value)
