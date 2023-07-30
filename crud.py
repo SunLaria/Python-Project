@@ -22,6 +22,7 @@ def search(task:object="default_task",data:dict="data"):
                 return user_task
 
 def delete(task:object="default_task",data:dict="data"):
+    """search and delete a task from specifid data"""
     for user in data.keys():
           for user_task in data[user]["tasks"]:
             if user_task.name == task.name:
@@ -29,11 +30,13 @@ def delete(task:object="default_task",data:dict="data"):
                  return "Deleted"
 
 def edit(task:object="default_task",key:str = "default_key",new_value:str = "default_value"):
+    """edit task atteibute"""
     setattr(task,key,new_value)
     return "Edited"
 
 
-def create_task(name,end_date, responsible_person, description, category):
+def create_task(name:str,end_date:tuple, responsible_person:str, description:str, category:str):
+    """create task and save to pickle"""
     data = load()
     task = Task(name, datetime.date.today(), end_date, responsible_person, description, category)
     if "tasks" not in data[responsible_person]:

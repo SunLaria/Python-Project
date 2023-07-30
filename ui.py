@@ -1,19 +1,18 @@
-from functions import startup, choose_user_task, choose_category_task, view_all_users_tasks,all_users_tasks, border, edit_task, delete_task, view_sorted_tasks, verify_uppercase, end_date_define
+from functions import startup, choose_user_task, choose_category_task, view_all_users_tasks,all_users_tasks, border, edit_task, delete_task, view_sorted_tasks, verify_uppercase, end_date_define, extend_task
 from crud import create_task
 import datetime
 import os
 
 
 def create_menu():
+    """task creation menu"""
     errors = []
     border()
     print()
     taskname = input("Task Name: ")
     taskname = verify_uppercase(taskname)
     print()
-    border()
-    print()
-    end_date = end_date_define(creation_date=datetime.date.today(),num=int(input("Number: ")),choice=input("d\\m\\y: "))
+    end_date = end_date_create(creation_date=datetime.date.today())
     print()
     responsible_person = choose_user_task()
     border()
@@ -39,6 +38,7 @@ def create_menu():
             return "task creation went bad"
 
 def view_menu():
+    """view all tasks menu"""
     while True:
         border()
         print()
@@ -52,7 +52,8 @@ def view_menu():
         elif choice == "B":
             break
 
-def view_sorted_menu(sort_word):
+def view_sorted_menu(sort_word:str = "responsible_person"):
+    """view all tasks menu in a sorted way"""
     while True:
         border()
         print()
@@ -68,7 +69,8 @@ def view_sorted_menu(sort_word):
             break
 
 
-def edit_menu(task):
+def edit_menu(task:object = "task"):
+    """edit menu"""
     while True:
         edit_keys = ["Name","End Date","Responsible Person","Description","Category"]
         choice = input("Please Enter The Category You Would Like To Edit Or [B]ack: ")
@@ -81,6 +83,7 @@ def edit_menu(task):
                 return edit_task(task=task,choice=choice)
                 
 def sort_menu():
+    """view all tasks sort menu"""
     while True:
         border()
         print()
@@ -100,6 +103,7 @@ def sort_menu():
 
 
 def task_menu(task:object="default_task"):
+    """view task info with features"""
     while True:
         border()
         print()
@@ -111,12 +115,13 @@ def task_menu(task:object="default_task"):
         Description : {task.description}
         Category: {task.category}""".title())
         print()
-        choice = input("[E]dit, E[X]pand, [D]elete, [B]ack To Menu: ")
+        choice = input("[E]dit, E[X]tand, [D]elete, [B]ack To Menu: ")
         choice = verify_uppercase(choice)
         if choice == "E":
             print(edit_menu(task))
         elif choice == "X":
-            pass
+            extend_task(task=task)
+
         elif choice == "D":
             choice = input("Delete Confirmation Y\\N: ")
             choice = verify_uppercase(choice)
@@ -131,8 +136,24 @@ def task_menu(task:object="default_task"):
         elif choice == "B":
             break
 
+def end_date_create(creation_date:tuple):
+    """end date creation"""
+    while True:
+        border()
+        print()
+        date_keys = {"Y":"Years","D":"Days","M":"Months"}
+        date_key = input("Task Period:\n\n[D]ays, [M]onthes, [Y]ears: ")
+        date_key = verify_uppercase(date_key)
 
+        if date_key != "" and date_key.isspace() == False:
+            if date_key in date_keys.keys():
+                print()
+                number= input(f"How Many {date_keys[date_key]}: ")
+                if int(number) > 0:
+                    return end_date_define(creation_date=creation_date,num=number,choice=date_key)
+            
 def main_menu():
+    """app main menu"""
     os.system('cls')
     startup()
     print()

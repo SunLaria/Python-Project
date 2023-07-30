@@ -1,6 +1,7 @@
 from crud import save,load, edit,delete, search
 from myclass import Task
 import datetime
+from dateutil.relativedelta import relativedelta
 
 
 def startup():
@@ -13,7 +14,8 @@ def startup():
         print("Database Created")
     return True
 
-def verify_uppercase(string):
+def verify_uppercase(string:str):
+    """verify user input uppercase"""
     if string.istitle() != True and string.isalpha() == True:
         return string.title()
     else:
@@ -21,7 +23,7 @@ def verify_uppercase(string):
 
 
 def create_user(user_name:str = "defualt_username"):
-    """creates a user"""
+    """creates a user in database"""
     data = load()
     user_name = verify_uppercase(user_name)
     if user_name not in data.keys():
@@ -33,6 +35,7 @@ def create_user(user_name:str = "defualt_username"):
         return f"{user_name} User Already Exists"
 
 def view_users():
+    """view all users in database"""
     data = load()
     border()
     print()
@@ -42,6 +45,7 @@ def view_users():
         return f"All Users:\n\nNo Users Found in Database"
 
 def delete_user(user_name:str="default_username"):
+    """delete user from database """
     user_name = verify_uppercase(user_name)
     choice = input("Delete Confirmation Y\\N: ")
     choice = verify_uppercase(choice)
@@ -59,6 +63,7 @@ def delete_user(user_name:str="default_username"):
         return f"{user_name} Delete Cancelled"
 
 def choose_user_task():
+    """users menu - return/add/remove"""
     while True:
         print(view_users())
         print()
@@ -93,7 +98,7 @@ def choose_user_task():
 
 
 def create_category(user_name:str = "defualt_username", category:str="default_category"):
-    """creates a user"""
+    """creates a category specified to a user"""
     data = load()
     user_name = verify_uppercase(user_name)
     category = verify_uppercase(category)
@@ -102,7 +107,8 @@ def create_category(user_name:str = "defualt_username", category:str="default_ca
     return f"{category} Category Created Successfully!"
 
 
-def view_categories(username):
+def view_categories(username:str = "defualt_username"):
+    """view specified user categories"""
     data = load()
     username = verify_uppercase(username)
     border()
@@ -114,6 +120,7 @@ def view_categories(username):
 
 
 def delete_category(user_name:str="default_username",category:str = "defualt_category"):
+    """delete category from specified user"""
     user_name = verify_uppercase(user_name)
     category = verify_uppercase(category)
     choice = input("Delete Confirmation: Y\\N: ")
@@ -131,7 +138,8 @@ def delete_category(user_name:str="default_username",category:str = "defualt_cat
     else:
         return f"{category} Delete Cancelled"
 
-def choose_category_task(username):
+def choose_category_task(username:str = "defualt_username"):
+    """user category menu - return/add/remove"""
     username = verify_uppercase(username)
     while True:
         print(view_categories(username=username))
@@ -163,18 +171,18 @@ def choose_category_task(username):
                 if category == choice:
                     return category
 
-def end_date_define(creation_date:tuple,num:int=0,choice:str="d"):
-    creation_date
+def end_date_define(creation_date:tuple,num:int=0,choice:str="default"):
+    """end date definer"""
     if choice == "D":
-        return datetime.date(day=creation_date.day+num,month=creation_date.month,year=creation_date.year)
+        return creation_date + relativedelta(days=int(num))
     elif choice == "M":
-        return datetime.date(day=creation_date.day,month=creation_date.month+num,year=creation_date.year)
+        return creation_date + relativedelta(months=int(num))
     elif choice == "Y":
-        return datetime.date(day=creation_date.day,month=creation_date.month,year=creation_date.year+num)
-
+        return creation_date + relativedelta(years=int(num))
 
 
 def all_users_tasks():
+    """return all users tasks"""
     data = load()
     all_user_tasks = []
     for user in data.keys():
@@ -184,6 +192,7 @@ def all_users_tasks():
     
 
 def view_all_users_tasks(tasks_list:list="all_tasks"):
+    """view all users tasks"""
     count = 1
     print("All Users Tasks:")
     print()
@@ -197,6 +206,7 @@ def view_all_users_tasks(tasks_list:list="all_tasks"):
         print("No Tasks found in the Database!")
 
 def view_sorted_tasks(tasks_list:list="all_tasks:", sort_word:str="responsible_person"):
+    """view sorted tasks"""
     tasks_list.sort(key = lambda x: getattr(x, sort_word)[0])
     count = 1
     print(f"All Users Tasks Sorted By {sort_word}:".title())
@@ -213,10 +223,12 @@ def view_sorted_tasks(tasks_list:list="all_tasks:", sort_word:str="responsible_p
 
 
 def border():
+    """print border"""
     print("----------------------------------------")
 
 
-def edit_task(task:object, choice:str="defualt"):
+def edit_task(task:object = "task", choice:str="defualt"):
+    """edit specified task"""
     if choice == "End Date":
         return 'Use Extend Feature'
     elif choice == "Responsible Person":
@@ -257,11 +269,33 @@ def edit_task(task:object, choice:str="defualt"):
         else:
             return 'Value Cannot Be Empty'
 
-def delete_task(task):
+def delete_task(task:object = "task"):
+        """delete specified task"""
         data = load()
         delete(task=task, data=data)
         save(data=data)
         return 'Task Deleted Successfully'
 
-def extend_task():
-    pass
+def extend_task(task:object = "task"):
+    """extend specified task"""
+    while True:
+        border()
+        print()
+        date_keys = {"Y":"Years","D":"Days","M":"Months"}
+        date_key = input("Extend Task Period:\n\n[D]ays, [M]onthes, [Y]ears , [B]ack To Menu: ")
+        date_key = verify_uppercase(date_key)
+
+        if date_key != "" and date_key.isspace() == False:
+            if date_key == "B":
+                break
+            elif date_key in date_keys.keys():
+                print()
+                number= input(f"How Many {date_keys[date_key]}: ")
+                if int(number) > 0:
+                    data = load()
+                    cache_task = task
+                    delete(task=task, data=data)
+                    edit(task=cache_task,key="end_date",new_value=end_date_define(creation_date=cache_task.end_date,num=number,choice=date_key))
+                    data[cache_task.responsible_person]["tasks"].append(cache_task)
+                    save(data=data)
+                    return 'Task Extend Successfully'
